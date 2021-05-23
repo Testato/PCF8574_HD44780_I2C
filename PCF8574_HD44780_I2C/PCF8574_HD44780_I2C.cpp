@@ -216,27 +216,27 @@ void PCF8574_HD44780_I2C::backlight(void) {
 	expanderWrite(0);
 }
 
-
+// Get the current cursor position
 void PCF8574_HD44780_I2C::getCursor(uint8_t &col, uint8_t &row) {
-  uint8_t addr = status();
-	uint8_t baseAdr = addr - ((addr&0x3F)%_cols);
-  switch (baseAdr) {
-    case 0x0:
-      row = 0;
-      break;
-    case 0x40:
-      row = 1;
-      break;
-    case 0x14:
-      row = 2;
-      break;
-    case 0x54:
-      row = 3;
-      break;
-    default:
-      break;
-  }
-	col = addr - baseAdr;
+	uint8_t addr = status();
+  	uint8_t baseAdr = addr - ((addr&0x3F)%_cols);
+	switch (baseAdr) {
+		case 0x0:
+		row = 0;
+		break;
+		case 0x40:
+		row = 1;
+		break;
+		case 0x14:
+		row = 2;
+		break;
+		case 0x54:
+		row = 3;
+		break;
+		default:
+		break;
+	}
+		col = addr - baseAdr;
 }
 
 
