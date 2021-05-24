@@ -12,7 +12,7 @@ based on code from:
 #define PCF8574_HD44780_I2C_h
 
 #include <inttypes.h>
-#include "Print.h" 
+#include "Print.h"
 #include <Wire.h>
 
 // Expander I/O port
@@ -60,7 +60,7 @@ based on code from:
 #define LCD_DISPLAYMOVE 0x08		// S/C Display shift
 #define LCD_CURSORMOVE 0x00			// S/C Cursor move
 #define LCD_MOVERIGHT 0x04			// R/L Shift to the right
-#define LCD_MOVELEFT 0x00			// R/L Shift to the left
+#define LCD_MOVELEFT 0x00			 // R/L Shift to the left
 
 // flags for function set
 #define LCD_8BITMODE 0x10			// DL
@@ -69,8 +69,6 @@ based on code from:
 #define LCD_1LINE 0x00
 #define LCD_5x10DOTS 0x04			// F
 #define LCD_5x8DOTS 0x00
-
-
 
 
 class PCF8574_HD44780_I2C : public Print {
@@ -96,9 +94,9 @@ public:
   void noBacklight();
   void backlight();
   void autoscroll();
-  void noAutoscroll(); 
+  void noAutoscroll();
   void createChar(uint8_t, uint8_t[]);
-  void setCursor(uint8_t, uint8_t); 
+  void setCursor(uint8_t, uint8_t);
   virtual size_t write(uint8_t);
   void command(uint8_t);
   void init();
@@ -112,8 +110,12 @@ void setBacklight(uint8_t new_val);				// alias for backlight() and nobacklight(
 void load_custom_character(uint8_t char_num, uint8_t *rows);	// alias for createChar()
 void printstr(const char[]);
 
+inline int status() {
+  return read(0);
+}
+void getCursor(uint8_t &col, uint8_t &row) ;
+
 ////Unsupported API functions (not implemented in this library)
-uint8_t status();
 void setContrast(uint8_t new_val);
 uint8_t keypad();
 void setDelay(int,int);
@@ -122,7 +124,6 @@ void off();
 uint8_t init_bargraph(uint8_t graphtype);
 void draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end);
 void draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end);
-	 
 
 private:
   void init_priv();
@@ -130,6 +131,9 @@ private:
   void write4bits(uint8_t);
   void expanderWrite(uint8_t);
   void pulseEnable(uint8_t);
+
+  int read(uint8_t);
+
   uint8_t _Addr;
   uint8_t _displayfunction;
   uint8_t _displaycontrol;

@@ -10,6 +10,10 @@ PCF8574+HD44780 LCD I2C Arduino Library
 - Original Library Ver 2.0 (not working on this breakoutboard) http://hmario.home.xs4all.nl/arduino/LiquidCrystal_I2C/
 
 ### Changelog
+2.3.0 
+- Added public getCursor() and status() and private read() methods.
+- Added new example GetCursor.ino
+
 2.2.1 (22 May 2021)
 - GitHub repo
 
