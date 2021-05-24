@@ -71,8 +71,10 @@ based on code from:
 #define LCD_5x8DOTS 0x00
 
 
+
 class PCF8574_HD44780_I2C : public Print {
 public:
+  enum {LCD_UP, LCD_DOWN, LCD_LEFT, LCD_RIGHT};
   PCF8574_HD44780_I2C(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows);
   void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS );
   void clear();
@@ -110,10 +112,11 @@ void setBacklight(uint8_t new_val);				// alias for backlight() and nobacklight(
 void load_custom_character(uint8_t char_num, uint8_t *rows);	// alias for createChar()
 void printstr(const char[]);
 
-inline int status() {
-  return read(0);
-}
-void getCursor(uint8_t &col, uint8_t &row) ;
+int status();
+char getChar();
+void getString(char* buffer, size_t len);
+void getCursor(uint8_t &col, uint8_t &row);
+void moveCursor(uint8_t dir, uint8_t step = 1);
 
 ////Unsupported API functions (not implemented in this library)
 void setContrast(uint8_t new_val);

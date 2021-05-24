@@ -216,6 +216,26 @@ void PCF8574_HD44780_I2C::backlight(void) {
 	expanderWrite(0);
 }
 
+
+// Get status byte (busy flag & DDRAM address)
+int PCF8574_HD44780_I2C::status() {
+  return read(0);
+}
+
+// Get the character at actual cursor position
+char PCF8574_HD44780_I2C::getChar() {
+  return (char)read(1);
+}
+
+// Get fixed size text from actual cursor position
+void PCF8574_HD44780_I2C::getString(char* buffer, size_t len) {
+	uint8_t i = 0;
+	for(i=0; i<min(len, _cols); i++){
+		buffer[i] = getChar();
+	}
+	buffer[i] = '\0';
+}
+
 // Get the current cursor position
 void PCF8574_HD44780_I2C::getCursor(uint8_t &col, uint8_t &row) {
 	uint8_t addr = status();
@@ -239,6 +259,24 @@ void PCF8574_HD44780_I2C::getCursor(uint8_t &col, uint8_t &row) {
 		col = addr - baseAdr;
 }
 
+void PCF8574_HD44780_I2C::moveCursor(uint8_t dir, uint8_t step) {
+	uint8_t _col, _row = 0;
+	getCursor(_col, _row);
+	switch (dir) {
+		case LCD_UP:
+			setCursor(_col, (_row - step)%_rows);
+			break;
+		case LCD_DOWN:
+		  setCursor(_col, (_row + step)%_rows);
+			break;
+		case LCD_LEFT:
+			setCursor((_col - step)%_cols, _row);
+			break;
+		case LCD_RIGHT:
+			setCursor((_col + step)%_cols, _row);
+			break;
+	}
+}
 
 /*********** mid level commands, for sending data/cmds */
 
@@ -312,7 +350,6 @@ void PCF8574_HD44780_I2C::expanderWrite(uint8_t _data){
 	Wire.write((int)(_data) | _backlightval);
 	Wire.endTransmission();
 }
-
 
 
 void PCF8574_HD44780_I2C::pulseEnable(uint8_t _data){
