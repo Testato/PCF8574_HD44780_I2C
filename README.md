@@ -11,7 +11,7 @@ PCF8574+HD44780 LCD I2C Arduino Library
 
 ### Changelog
 2.3.1
-- Added moveCursor() function
+- Added moveCursor(), row() and col() functions
 - Added readChar() and readString() functions
 
 2.3.0 
