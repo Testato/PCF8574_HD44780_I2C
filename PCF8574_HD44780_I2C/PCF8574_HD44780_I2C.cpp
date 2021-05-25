@@ -31,14 +31,16 @@ based on code from:
 // can't assume that its in that state when a sketch starts (and the
 // LiquidCrystal constructor is called).
 
-PCF8574_HD44780_I2C::PCF8574_HD44780_I2C(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows) {
+PCF8574_HD44780_I2C::PCF8574_HD44780_I2C(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows) 
+{
 	_Addr = lcd_Addr;
 	_cols = lcd_cols;
 	_rows = lcd_rows;
 	_backlightval = LCD_NOBACKLIGHT;
 }
 
-void PCF8574_HD44780_I2C::init() {
+void PCF8574_HD44780_I2C::init() 
+{
 	init_priv();
 }
 
