@@ -7,12 +7,10 @@ based on code from:
 - Mario H.
 **********************************/
 
-
 #include "PCF8574_HD44780_I2C.h"
 #include <inttypes.h>
 #include "Wire.h"
 #include "Arduino.h"
-
 
 // When the display powers up, it is configured as follows:
 //
@@ -33,20 +31,18 @@ based on code from:
 // can't assume that its in that state when a sketch starts (and the
 // LiquidCrystal constructor is called).
 
-PCF8574_HD44780_I2C::PCF8574_HD44780_I2C(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows)
-{
-  _Addr = lcd_Addr;
-  _cols = lcd_cols;
-  _rows = lcd_rows;
-  _backlightval = LCD_NOBACKLIGHT;
+PCF8574_HD44780_I2C::PCF8574_HD44780_I2C(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows) {
+	_Addr = lcd_Addr;
+	_cols = lcd_cols;
+	_rows = lcd_rows;
+	_backlightval = LCD_NOBACKLIGHT;
 }
 
-void PCF8574_HD44780_I2C::init(){
+void PCF8574_HD44780_I2C::init() {
 	init_priv();
 }
 
-void PCF8574_HD44780_I2C::init_priv()
-{
+void PCF8574_HD44780_I2C::init_priv() {
 	Wire.begin();
 	_displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
 	begin(_cols, _rows);
@@ -59,7 +55,7 @@ void PCF8574_HD44780_I2C::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 	_numlines = lines;
 
 	// for some 1 line displays you can select a 10 pixel high font
-	if ((dotsize != 0) && (lines == 1)) {
+	if ((dotsize != 0) && (lines == 1))	{
 		_displayfunction |= LCD_5x10DOTS;
 	}
 
@@ -73,7 +69,7 @@ void PCF8574_HD44780_I2C::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 	//expanderWrite(_backlightval);	// reset expanderand turn backlight off (Bit 8 =1) - _backlightval = LCD_NOBACKLIGHT;
 	//delay(1000);
 
-  	// put the LCD into 4 bit mode
+	// put the LCD into 4 bit mode
 	// this is according to the hitachi HD44780 datasheet
 	// figure 24, pg 46
 
@@ -90,7 +86,6 @@ void PCF8574_HD44780_I2C::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 
 	// Set interface to be 4 bits long
 	write4bits(_BV(P5));
-
 
 	// set # lines, font size, etc.
 	command(LCD_FUNCTIONSET | _displayfunction);
@@ -109,26 +104,23 @@ void PCF8574_HD44780_I2C::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 	command(LCD_ENTRYMODESET | _displaymode);
 
 	home();
-
 }
-
-
 
 /********** high level commands, for the user! */
-void PCF8574_HD44780_I2C::clear(){
-	command(LCD_CLEARDISPLAY);// clear display, set cursor position to zero
-	delayMicroseconds(2000);  // this command takes a long time!
+void PCF8574_HD44780_I2C::clear() {
+	command(LCD_CLEARDISPLAY);   // clear display, set cursor position to zero
+	delayMicroseconds(2000);	 // this command takes a long time!
 }
 
-void PCF8574_HD44780_I2C::home(){
-	command(LCD_RETURNHOME);  // set cursor position to zero
-	delayMicroseconds(2000);  // this command takes a long time!
+void PCF8574_HD44780_I2C::home() {
+	command(LCD_RETURNHOME); // set cursor position to zero
+	delayMicroseconds(2000); // this command takes a long time!
 }
 
-void PCF8574_HD44780_I2C::setCursor(uint8_t col, uint8_t row){
-	int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };				// LCD Addressing
-	if ( row > _numlines ) {
-		row = _numlines-1;    // we count rows starting w/0
+void PCF8574_HD44780_I2C::setCursor(uint8_t col, uint8_t row) {
+	int row_offsets[] = {0x00, 0x40, 0x14, 0x54}; // LCD Addressing
+	if (row > _numlines) 	{
+		row = _numlines - 1; // we count rows starting w/0
 	}
 	command(LCD_SETDDRAMADDR | (col + row_offsets[row]));
 }
@@ -200,37 +192,36 @@ void PCF8574_HD44780_I2C::noAutoscroll(void) {
 void PCF8574_HD44780_I2C::createChar(uint8_t location, uint8_t charmap[]) {
 	location &= 0x7; // we only have 8 locations 0-7
 	command(LCD_SETCGRAMADDR | (location << 3));
-	for (int i=0; i<8; i++) {
+	for (int i = 0; i < 8; i++) {
 		write(charmap[i]);
 	}
 }
 
 // Turn the (optional) backlight off/on
 void PCF8574_HD44780_I2C::noBacklight(void) {
-	_backlightval=LCD_NOBACKLIGHT;
+	_backlightval = LCD_NOBACKLIGHT;
 	expanderWrite(0);
 }
 
 void PCF8574_HD44780_I2C::backlight(void) {
-	_backlightval=LCD_BACKLIGHT;
+	_backlightval = LCD_BACKLIGHT;
 	expanderWrite(0);
 }
 
-
 // Get status byte (busy flag & DDRAM address)
 int PCF8574_HD44780_I2C::status() {
-    return read(0);
+	return read(0);
 }
 
 // Get the character at actual cursor position
 char PCF8574_HD44780_I2C::getChar() {
-    return (char)read(1);
+	return (char)read(1);
 }
 
 // Get fixed size text from actual cursor position
-void PCF8574_HD44780_I2C::getString(char* buffer, size_t len) {
+void PCF8574_HD44780_I2C::getString(char *buffer, size_t len) {
 	uint8_t i = 0;
-	for(i=0; i<min(len, _cols); i++){
+	for (i = 0; i < min(len, _cols); i++) {
 		buffer[i] = getChar();
 	}
 	buffer[i] = '\0';
@@ -239,44 +230,42 @@ void PCF8574_HD44780_I2C::getString(char* buffer, size_t len) {
 // Get the current cursor position
 void PCF8574_HD44780_I2C::getCursor(uint8_t &col, uint8_t &row) {
 	uint8_t addr = status();
-  	uint8_t baseAdr = addr - ((addr&0x3F)%_cols);
+	uint8_t baseAdr = addr - ((addr & 0x3F) % _cols);
 	switch (baseAdr) {
-		case 0x0:
-		    row = 0;
-		    break;
-		case 0x40:
-		    row = 1;
-		    break;
-		case 0x14:
-		    row = 2;
-		    break;
-		case 0x54:
-		    row = 3;
-		    break;
-		default:
-		    break;
+	case 0x0:
+		row = 0;
+		break;
+	case 0x40:
+		row = 1;
+		break;
+	case 0x14:
+		row = 2;
+		break;
+	case 0x54:
+		row = 3;
+		break;
+	default:
+		break;
 	}
-		col = addr - baseAdr;
+	col = addr - baseAdr;
 }
 
 void PCF8574_HD44780_I2C::moveCursor(uint8_t dir, uint8_t step) {
 	uint8_t _col, _row = 0;
 	getCursor(_col, _row);
 	switch (dir) {
-		case LCD_UP:
-			setCursor(_col, (_row - step)%_rows);
-			break;
-		case LCD_DOWN:
-		  setCursor(_col, (_row + step)%_rows);
-			break;
-		case LCD_LEFT:
-			setCursor((_col - step)%_cols, _row);
-			break;
-		case LCD_RIGHT:
-			setCursor((_col + step)%_cols, _row);
-			break;
-        default:
-		    break;
+	case LCD_UP:
+		setCursor(_col, (_row - step) % _rows);
+		break;
+	case LCD_DOWN:
+		setCursor(_col, (_row + step) % _rows);
+		break;
+	case LCD_LEFT:
+		setCursor((_col - step) % _cols, _row);
+		break;
+	case LCD_RIGHT:
+		setCursor((_col + step) % _cols, _row);
+		break;
 	}
 }
 
@@ -288,9 +277,8 @@ inline void PCF8574_HD44780_I2C::command(uint8_t value) {
 
 inline size_t PCF8574_HD44780_I2C::write(uint8_t value) {
 	send(value, Rs);
-	return 1;			// https://github.com/marcoschwartz/LiquidCrystal_I2C/pull/5
+	return 1; // https://github.com/marcoschwartz/LiquidCrystal_I2C/pull/5
 }
-
 
 /************ low level data pushing commands **********/
 
@@ -298,15 +286,15 @@ inline size_t PCF8574_HD44780_I2C::write(uint8_t value) {
 int PCF8574_HD44780_I2C::read(uint8_t mode) {
 	uint8_t gpio, data, iodata = 0;
 
-	delayMicroseconds(45);  // ensure that previous LCD instruction finished.
+	delayMicroseconds(45); // ensure that previous LCD instruction finished.
 	// Put all the expander LCD data pins into input mode.
 	// PCF8574 psuedo inputs use pullups so setting them to 1.
-	gpio |= _BV(P4)|_BV(P5)|_BV(P6)|_BV(P7);
+	gpio |= _BV(P4) | _BV(P5) | _BV(P6) | _BV(P7);
 	// Set RS based on type of read (data or status/cmd)
-	if(mode) {
-		gpio |= Rs;   // RS high to read data reg
+	if (mode) {
+		gpio |= Rs; // RS high to read data reg
 	}
-	gpio |= Rw; 	  // R/W high for reading
+	gpio |= Rw; // R/W high for reading
 	// P4-P7 are inputs, RS, R/W high, En LOW
 	expanderWrite(gpio);
 	// Raise En
@@ -319,25 +307,23 @@ int PCF8574_HD44780_I2C::read(uint8_t mode) {
 	expanderWrite(gpio);
 	// Raise E to read next nibble
 	expanderWrite(gpio | En);
-	 // Read upper nibble of the byte
+	// Read upper nibble of the byte
 	Wire.requestFrom((int)_Addr, 1);
 	iodata = Wire.read();
 	data |= (iodata >> 4 & 0b00001111);
 	// lower En after reading nibble
 	expanderWrite(gpio);
 	// Restore gpio as outputs
-    expanderWrite(0);
+	expanderWrite(0);
 	return data;
 }
 
-
-
 // write either command or data
 void PCF8574_HD44780_I2C::send(uint8_t value, uint8_t mode) {
-	uint8_t highnib=value & 0xF0;
-	uint8_t lownib=value << 4;
-	write4bits((highnib)|mode);
-	write4bits((lownib)|mode);
+	uint8_t highnib = value & 0xF0;
+	uint8_t lownib = value << 4;
+	write4bits((highnib) | mode);
+	write4bits((lownib) | mode);
 }
 
 void PCF8574_HD44780_I2C::write4bits(uint8_t value) {
@@ -345,67 +331,64 @@ void PCF8574_HD44780_I2C::write4bits(uint8_t value) {
 	pulseEnable(value);
 }
 
-void PCF8574_HD44780_I2C::expanderWrite(uint8_t _data){
+void PCF8574_HD44780_I2C::expanderWrite(uint8_t _data) {
 	Wire.beginTransmission(_Addr);
 	Wire.write((int)(_data) | _backlightval);
 	Wire.endTransmission();
 }
 
+void PCF8574_HD44780_I2C::pulseEnable(uint8_t _data) {
+	expanderWrite(_data | En); // En high
+	delayMicroseconds(1);	   // enable pulse must be >450ns
 
-void PCF8574_HD44780_I2C::pulseEnable(uint8_t _data){
-	expanderWrite(_data | En);	// En high
-	delayMicroseconds(1);		// enable pulse must be >450ns
-
-	expanderWrite(_data & ~En);	// En low
+	expanderWrite(_data & ~En); // En low
 	delayMicroseconds(50);		// commands need > 37us to settle
 }
 
-
 // Alias functions
 
-void PCF8574_HD44780_I2C::cursor_on(){
+void PCF8574_HD44780_I2C::cursor_on() {
 	cursor();
 }
 
-void PCF8574_HD44780_I2C::cursor_off(){
+void PCF8574_HD44780_I2C::cursor_off() {
 	noCursor();
 }
 
-void PCF8574_HD44780_I2C::blink_on(){
+void PCF8574_HD44780_I2C::blink_on() {
 	blink();
 }
 
-void PCF8574_HD44780_I2C::blink_off(){
+void PCF8574_HD44780_I2C::blink_off() {
 	noBlink();
 }
 
-void PCF8574_HD44780_I2C::load_custom_character(uint8_t char_num, uint8_t *rows){
-		createChar(char_num, rows);
+void PCF8574_HD44780_I2C::load_custom_character(uint8_t char_num, uint8_t *rows) {
+	createChar(char_num, rows);
 }
 
-void PCF8574_HD44780_I2C::setBacklight(uint8_t new_val){
-	if(new_val){
-		backlight();		// turn backlight on
-	}else{
-		noBacklight();		// turn backlight off
+void PCF8574_HD44780_I2C::setBacklight(uint8_t new_val) {
+	if (new_val) {
+		backlight();   // turn backlight on
+	}
+	else {
+		noBacklight(); // turn backlight off
 	}
 }
 
-void PCF8574_HD44780_I2C::printstr(const char c[]){
+void PCF8574_HD44780_I2C::printstr(const char c[]) {
 	//This function is not identical to the function used for "real" I2C displays
 	//it's here so the user sketch doesn't have to be changed
 	print(c);
 }
 
-
 // unsupported API functions
-void PCF8574_HD44780_I2C::off(){}
-void PCF8574_HD44780_I2C::on(){}
-void PCF8574_HD44780_I2C::setDelay (int cmdDelay,int charDelay) {}
+void PCF8574_HD44780_I2C::off() {}
+void PCF8574_HD44780_I2C::on() {}
+void PCF8574_HD44780_I2C::setDelay(int cmdDelay, int charDelay) {}
 
-uint8_t PCF8574_HD44780_I2C::keypad (){return 0;}
-uint8_t PCF8574_HD44780_I2C::init_bargraph(uint8_t graphtype){return 0;}
-void PCF8574_HD44780_I2C::draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end){}
-void PCF8574_HD44780_I2C::draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_row_end){}
-void PCF8574_HD44780_I2C::setContrast(uint8_t new_val){}
-
+uint8_t PCF8574_HD44780_I2C::keypad() { return 0; }
+uint8_t PCF8574_HD44780_I2C::init_bargraph(uint8_t graphtype) { return 0; }
+void PCF8574_HD44780_I2C::draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len, uint8_t pixel_col_end) {}
+void PCF8574_HD44780_I2C::draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len, uint8_t pixel_row_end) {}
+void PCF8574_HD44780_I2C::setContrast(uint8_t new_val) {}
