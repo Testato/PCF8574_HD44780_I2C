@@ -251,7 +251,7 @@ void PCF8574_HD44780_I2C::getCursor(uint8_t &col, uint8_t &row) {
 }
 
 void PCF8574_HD44780_I2C::moveCursor(uint8_t dir, uint8_t step) {
-	uint8_t _col, _row = 0;
+	uint8_t _col = 0, _row = 0;
 	getCursor(_col, _row);
 	switch (dir) {
 	case LCD_UP:
@@ -269,6 +269,20 @@ void PCF8574_HD44780_I2C::moveCursor(uint8_t dir, uint8_t step) {
 	}
 }
 
+// Get current column position
+uint8_t PCF8574_HD44780_I2C::col(){
+    uint8_t _col = 0, _row = 0;
+	getCursor(_col, _row);
+    return _col;
+}
+
+// Get current row position
+uint8_t PCF8574_HD44780_I2C::row(){
+    uint8_t _col = 0, _row = 0;
+	getCursor(_col, _row);
+    return _row;
+}
+
 /*********** mid level commands, for sending data/cmds */
 
 inline void PCF8574_HD44780_I2C::command(uint8_t value) {
@@ -284,7 +298,7 @@ inline size_t PCF8574_HD44780_I2C::write(uint8_t value) {
 
 // read either command or data
 int PCF8574_HD44780_I2C::read(uint8_t mode) {
-	uint8_t gpio, data, iodata = 0;
+	uint8_t gpio = 0, data = 0, iodata = 0;
 
 	delayMicroseconds(45); // ensure that previous LCD instruction finished.
 	// Put all the expander LCD data pins into input mode.

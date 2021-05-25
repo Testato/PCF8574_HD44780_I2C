@@ -111,6 +111,8 @@ public:
     void printstr(const char[]);
 
     int status();
+    uint8_t col();
+    uint8_t row();
     char getChar();
     void getString(char *buffer, size_t len);
     void getCursor(uint8_t &col, uint8_t &row);
