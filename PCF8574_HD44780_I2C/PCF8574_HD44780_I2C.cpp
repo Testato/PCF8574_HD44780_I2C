@@ -404,7 +404,6 @@ void PCF8574_HD44780_I2C::printstr(const char c[]) {
 void PCF8574_HD44780_I2C::off() {}
 void PCF8574_HD44780_I2C::on() {}
 void PCF8574_HD44780_I2C::setDelay(int cmdDelay, int charDelay) {}
-
 uint8_t PCF8574_HD44780_I2C::keypad() { return 0; }
 uint8_t PCF8574_HD44780_I2C::init_bargraph(uint8_t graphtype) { return 0; }
 void PCF8574_HD44780_I2C::draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len, uint8_t pixel_col_end) {}
