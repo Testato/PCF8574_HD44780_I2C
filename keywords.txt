@@ -1,13 +1,7 @@
 ###########################################
-# Syntax Coloring Map
-# PCF8574_HD44780_I2C Library
-###########################################
-
-###########################################
 # Datatypes (KEYWORD1)
 ###########################################
-
-LiquidCrystal_I2C	KEYWORD1
+PCF8574_HD44780_I2C KEYWORD1
 
 ###########################################
 # Methods and Functions (KEYWORD2)
@@ -24,6 +18,8 @@ noCursor	KEYWORD2
 cursor	KEYWORD2
 scrollDisplayLeft	KEYWORD2
 scrollDisplayRight	KEYWORD2
+printLeft	KEYWORD2
+printRight	KEYWORD2
 leftToRight	KEYWORD2
 rightToLeft	KEYWORD2
 shiftIncrement	KEYWORD2
@@ -34,6 +30,8 @@ autoscroll	KEYWORD2
 noAutoscroll	KEYWORD2
 createChar	KEYWORD2
 setCursor	KEYWORD2
+write	KEYWORD2
+command	KEYWORD2
 print	KEYWORD2
 blink_on	KEYWORD2
 blink_off	KEYWORD2
@@ -42,6 +40,18 @@ cursor_off	KEYWORD2
 setBacklight	KEYWORD2
 load_custom_character	KEYWORD2
 printstr	KEYWORD2
+status KEYWORD2
+col KEYWORD2
+row KEYWORD2
+getChar KEYWORD2
+getString KEYWORD2
+getCursor KEYWORD2
+moveCursor KEYWORD2
+
 ###########################################
-# Constants (LITERAL1)
+# Constants
 ###########################################
+LCD_UP LITERAL1
+LCD_DOWN LITERAL1
+LCD_LEFT LITERAL1
+LCD_RIGHT LITERAL1
