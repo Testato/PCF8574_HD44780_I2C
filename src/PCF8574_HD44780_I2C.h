@@ -114,7 +114,7 @@ public:
     uint8_t col();
     uint8_t row();
     char getChar();
-    void getString(char *buffer, size_t len);
+    void getString(char *buffer, uint8_t len);
     void getCursor(uint8_t &col, uint8_t &row);
     void moveCursor(uint8_t dir, uint8_t step = 1);
 
