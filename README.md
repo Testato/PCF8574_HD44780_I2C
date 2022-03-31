@@ -10,6 +10,10 @@ PCF8574+HD44780 LCD I2C Arduino Library
 - Original Library Ver 2.0 (not working on this breakoutboard) http://hmario.home.xs4all.nl/arduino/LiquidCrystal_I2C/
 
 ### Changelog
+2.4.0
+- ESP8266 and ESP32 compatibility
+- Adapt for Arduino library (thanks to @cotestatnt) 
+
 2.3.1
 - Added moveCursor(), row() and col() functions
 - Added readChar() and readString() functions
@@ -22,7 +26,7 @@ PCF8574+HD44780 LCD I2C Arduino Library
 - GitHub repo
 
 2.2.0
-- Solved the "prints only the first character" bug (thanks to Brunello)
+- Solved the "prints only the first character" bug (thanks to @Brunello)
 
 2.1.0 (first release compatible with this breakoutboard): 
 - Changed name to PCF8574_HD44780_I2C Library

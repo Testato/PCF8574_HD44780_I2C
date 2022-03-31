@@ -225,7 +225,7 @@ char PCF8574_HD44780_I2C::getChar() {
 // Get fixed size text from actual cursor position
 void PCF8574_HD44780_I2C::getString(char *buffer, size_t len) {
 	uint8_t i = 0;
-	for (i = 0; i < min(len, _cols); i++) {
+	for (i = 0; i < min(len, (unsigned int)_cols); i++) {
 		buffer[i] = getChar();
 	}
 	buffer[i] = '\0';
