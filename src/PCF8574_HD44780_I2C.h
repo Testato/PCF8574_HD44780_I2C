@@ -10,6 +10,11 @@ based on code from:
 #ifndef PCF8574_HD44780_I2C_h
 #define PCF8574_HD44780_I2C_h
 
+// Mbed compatibility
+#ifndef _BV
+#define _BV(bit) (1 << (bit))
+#endif
+
 #include <inttypes.h>
 #include "Print.h"
 #include <Wire.h>
